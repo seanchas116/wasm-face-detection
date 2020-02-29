@@ -4,6 +4,8 @@
   "description": "Face Detection using dlib/OpenCV in WebAssembly",
   "main": "index.js",
   "scripts": {
+    "build": "emcc main.cpp -o build/index.html",
+    "serve": "http-server build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -16,5 +18,8 @@
     "url": "https://github.com/seanchas116/wasm-face-detection/issues"
   },
   "homepage": "https://github.com/seanchas116/wasm-face-detection#readme",
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "http-server": "^0.12.1"
+  }
 }
