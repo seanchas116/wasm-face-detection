@@ -1,7 +1,5 @@
-const canvas = document.getElementById('canvas')
-
 ;(window as any).Module = {
-  canvas: canvas,
+  canvas: document.getElementById('canvas'),
   onRuntimeInitialized: init,
 }
 
