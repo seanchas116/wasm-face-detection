@@ -17,4 +17,13 @@ const canvas = document.getElementById('canvas')
         },
     })
     video.srcObject = stream
+
+    const videoCanvas = document.getElementById('videocanvas') as HTMLCanvasElement
+    const context = videoCanvas.getContext('2d')!
+
+    const updateCanvas = () => {
+        context.drawImage(video, 0, 0)
+        requestAnimationFrame(updateCanvas)
+    }
+    updateCanvas()
 })()
