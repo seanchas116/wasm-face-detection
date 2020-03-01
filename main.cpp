@@ -3,12 +3,14 @@
 #include <emscripten.h>
 #include <emscripten/bind.h>
 #include <dlib/array2d.h>
+#include <dlib/image_processing/frontal_face_detector.h>
 
 namespace {
 
 constexpr int WIDTH = 320;
 constexpr int HEIGHT = 240;
 SDL_Surface* screen = nullptr;
+dlib::frontal_face_detector faceDetector = dlib::get_frontal_face_detector();
 
 }
 
@@ -36,6 +38,9 @@ void putImageData(size_t addr, int width, int height) {
       }
     }
   }
+
+  std::vector<dlib::rectangle> faces = faceDetector(image);
+  std::cout << "faces: " << faces.size() << std::endl;
 
   if (SDL_MUSTLOCK(screen)) SDL_LockSurface(screen);
   memcpy(screen->pixels, data, width * height * 4);
