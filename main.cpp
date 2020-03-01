@@ -20,10 +20,10 @@ extern "C" int main(int argc, char** argv) {
   return 0;
 }
 
-void putImageData(const emscripten::val& data$) {
+void putImageData(size_t addr, size_t size) {
+  auto data = reinterpret_cast<const uint8_t *>(addr);
   if (SDL_MUSTLOCK(screen)) SDL_LockSurface(screen);
-  auto vec = emscripten::vecFromJSArray<uint8_t>(data$);
-  memcpy(screen->pixels, vec.data(), vec.size());
+  memcpy(screen->pixels, data, size);
   if (SDL_MUSTLOCK(screen)) SDL_UnlockSurface(screen);
   SDL_Flip(screen); 
 }
