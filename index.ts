@@ -19,13 +19,14 @@ async function init() {
     })
     video.srcObject = stream
 
-    const videoCanvas = document.getElementById('videocanvas') as HTMLCanvasElement
+    const videoCanvas = document.createElement('canvas')
+    videoCanvas.width = video.width
+    videoCanvas.height = video.height
     const context = videoCanvas.getContext('2d')!
 
     const updateCanvas = () => {
         context.drawImage(video, 0, 0)
         const data = context.getImageData(0, 0, videoCanvas.width, videoCanvas.height)
-        console.log(data)
         ;(window as any).Module.putImageData(data.data)
         requestAnimationFrame(updateCanvas)
     }
