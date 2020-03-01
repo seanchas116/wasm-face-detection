@@ -162,4 +162,5 @@ temp/
 # End of https://www.gitignore.io/api/c++,node,cmake
 
 /dist/build
+/dist/bundle.js
 .vscode
