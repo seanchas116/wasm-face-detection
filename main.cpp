@@ -36,7 +36,7 @@ void putDlibImage(const dlib::array2d<dlib::bgr_pixel>& image) {
   }
 }
 
-void putImageData(size_t addr, int width, int height) {
+void detectAndRender(size_t addr, int width, int height) {
   auto data = reinterpret_cast<const uint8_t *>(addr);
 
   dlib::array2d<dlib::bgr_pixel> image(height, width);
@@ -65,5 +65,5 @@ void putImageData(size_t addr, int width, int height) {
 }
 
 EMSCRIPTEN_BINDINGS(my_module) {
-    emscripten::function("putImageData", &putImageData);
+    emscripten::function("detectAndRender", &detectAndRender);
 }
