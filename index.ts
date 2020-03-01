@@ -2,12 +2,11 @@ interface EmscriptenModule {
   detectAndRender(data: number, width: number, height: number): void
 }
 
-window.Module = {
-  canvas: document.getElementById('canvas'),
-  onRuntimeInitialized: init,
-} as any
+const preRun = () => {
+  FS.createPreloadedFile('/', 'shape_predictor_68_face_landmarks.dat', 'shape_predictor_68_face_landmarks.dat', true, false);
+}
 
-async function init() {
+const init = async () => {
   const video = document.createElement('video')
   video.width = 320
   video.height = 240
@@ -39,3 +38,9 @@ async function init() {
   }
   updateCanvas()
 }
+
+window.Module = {
+  canvas: document.getElementById('canvas'),
+  preRun: preRun,
+  onRuntimeInitialized: init,
+} as any

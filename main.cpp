@@ -3,6 +3,7 @@
 #include <emscripten/bind.h>
 #include <dlib/array2d.h>
 #include <dlib/image_processing/frontal_face_detector.h>
+#include <dlib/image_processing.h>
 #include <dlib/image_transforms/draw.h>
 
 namespace {
@@ -11,10 +12,13 @@ constexpr int WIDTH = 320;
 constexpr int HEIGHT = 240;
 SDL_Surface* screen = nullptr;
 dlib::frontal_face_detector faceDetector = dlib::get_frontal_face_detector();
+dlib::shape_predictor poseModel;
 
 }
 
 extern "C" int main(int argc, char** argv) {
+  dlib::deserialize("/shape_predictor_68_face_landmarks.dat") >> poseModel;
+
   SDL_Init(SDL_INIT_VIDEO);
   screen = SDL_SetVideoMode(WIDTH, HEIGHT, 32, SDL_SWSURFACE);
 
