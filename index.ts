@@ -26,6 +26,8 @@ const canvas = document.getElementById('canvas')
 
     const updateCanvas = () => {
         context.drawImage(video, 0, 0)
+        const data = context.getImageData(0, 0, videoCanvas.width, videoCanvas.height)
+        console.log(data)
         requestAnimationFrame(updateCanvas)
     }
     updateCanvas()
