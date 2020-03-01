@@ -21,6 +21,7 @@
   "homepage": "https://github.com/seanchas116/wasm-face-detection#readme",
   "private": true,
   "devDependencies": {
+    "@types/emscripten": "^1.39.2",
     "ts-loader": "^6.2.1",
     "typescript": "^3.8.3",
     "webpack": "^4.41.6",

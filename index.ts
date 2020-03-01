@@ -1,7 +1,11 @@
-;(window as any).Module = {
+interface EmscriptenModule {
+  putImageData(data: Uint8ClampedArray): void
+}
+
+window.Module = {
   canvas: document.getElementById('canvas'),
   onRuntimeInitialized: init,
-}
+} as any
 
 async function init() {
   const video = document.createElement('video')
@@ -25,7 +29,7 @@ async function init() {
   const updateCanvas = () => {
     context.drawImage(video, 0, 0)
     const data = context.getImageData(0, 0, videoCanvas.width, videoCanvas.height)
-    ;(window as any).Module.putImageData(data.data)
+    Module.putImageData(data.data)
     requestAnimationFrame(updateCanvas)
   }
   updateCanvas()
