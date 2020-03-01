@@ -1,5 +1,5 @@
 interface EmscriptenModule {
-  putImageData(data: number, size: number): void
+  putImageData(data: number, width: number, height: number): void
 }
 
 window.Module = {
@@ -32,7 +32,7 @@ async function init() {
 
     const buffer = Module._malloc(data.data.length)
     Module.HEAPU8.set(data.data, buffer);
-    Module.putImageData(buffer, data.data.length)
+    Module.putImageData(buffer, data.width, data.height)
     Module._free(buffer)
 
     requestAnimationFrame(updateCanvas)
