@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <SDL/SDL.h>
 #include <emscripten.h>
 #include <emscripten/bind.h>
@@ -16,8 +15,6 @@ dlib::frontal_face_detector faceDetector = dlib::get_frontal_face_detector();
 }
 
 extern "C" int main(int argc, char** argv) {
-  printf("hello, world!\n");
-
   SDL_Init(SDL_INIT_VIDEO);
   screen = SDL_SetVideoMode(WIDTH, HEIGHT, 32, SDL_SWSURFACE);
 
