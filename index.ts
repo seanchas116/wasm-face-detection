@@ -10,7 +10,6 @@ const init = async () => {
   const video = document.createElement('video')
   video.width = 320
   video.height = 240
-  video.autoplay = true
   const stream = await navigator.mediaDevices.getUserMedia({
     audio: false,
     video: {
@@ -19,6 +18,7 @@ const init = async () => {
     },
   })
   video.srcObject = stream
+  video.play()
 
   const videoCanvas = document.createElement('canvas')
   videoCanvas.width = video.width
