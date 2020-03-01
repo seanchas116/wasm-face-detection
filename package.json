@@ -6,9 +6,9 @@
   "scripts": {
     "configure:cpp": "cd build && emconfigure cmake ..",
     "build:cpp": "cd build && emmake make",
-    "build": "npm run build:cpp && webpack",
+    "build": "npm run configure:cpp && npm run build:cpp && webpack",
     "serve": "webpack-dev-server",
-    "deploy": "gh-pages -d build -s '*.+(html|js|wasm)'",
+    "deploy": "npm run build && gh-pages -d build -s '*.+(html|js|wasm)'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
