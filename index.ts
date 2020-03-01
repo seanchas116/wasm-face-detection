@@ -2,12 +2,10 @@ const canvas = document.getElementById('canvas')
 
 ;(window as any).Module = {
     canvas: canvas,
-    onRuntimeInitialized: () => {
-        console.log('lerp result: ' + (Module as any).lerp(1, 2, 0.5));
-    }
+    onRuntimeInitialized: init,
 }
 
-;(async () => {
+async function init() {
     const video = document.createElement('video')
     video.width = 320
     video.height = 240
@@ -28,7 +26,8 @@ const canvas = document.getElementById('canvas')
         context.drawImage(video, 0, 0)
         const data = context.getImageData(0, 0, videoCanvas.width, videoCanvas.height)
         console.log(data)
+        ;(window as any).Module.putImageData(data.data)
         requestAnimationFrame(updateCanvas)
     }
     updateCanvas()
-})()
+}
