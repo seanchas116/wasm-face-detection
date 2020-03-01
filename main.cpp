@@ -1,9 +1,7 @@
 #include <stdio.h>
 #include <SDL/SDL.h>
-
-#ifdef __EMSCRIPTEN__
 #include <emscripten.h>
-#endif
+#include <emscripten/bind.h>
 
 extern "C" int main(int argc, char** argv) {
   printf("hello, world!\n");
@@ -38,4 +36,12 @@ extern "C" int main(int argc, char** argv) {
   SDL_Quit();
 
   return 0;
+}
+
+float lerp(float a, float b, float t) {
+    return (1 - t) * a + t * b;
+}
+
+EMSCRIPTEN_BINDINGS(my_module) {
+    emscripten::function("lerp", &lerp);
 }

@@ -15,7 +15,10 @@ module.exports = {
     extensions: [ '.tsx', '.ts', '.js' ],
   },
   output: {
-    filename: 'bundle.js',
-    path: path.resolve(__dirname, 'build'),
+    filename: 'build/bundle.js',
+    path: __dirname,
+  },
+  devServer: {
+    contentBase: __dirname,
   },
 };
