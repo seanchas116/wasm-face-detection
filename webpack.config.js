@@ -1,4 +1,7 @@
-const path = require('path');
+const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+
+const buildDir = path.resolve(__dirname, './build')
 
 module.exports = {
   entry: './index.ts',
@@ -15,10 +18,17 @@ module.exports = {
     extensions: [ '.tsx', '.ts', '.js' ],
   },
   output: {
-    filename: 'build/bundle.js',
-    path: __dirname,
+    filename: 'bundle.js',
+    publicPath: '/',
+    path: buildDir,
   },
   devServer: {
-    contentBase: __dirname,
+    contentBase: buildDir,
   },
-};
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: "./index.html",
+      inject: false,
+    }),
+  ],
+}
