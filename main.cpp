@@ -53,7 +53,6 @@ void detectAndRender(size_t addr, int width, int height) {
   }
 
   std::vector<dlib::rectangle> faces = faceDetector(image);
-  std::cout << "faces: " << faces.size() << std::endl;
   for (auto&& face : faces) {
     dlib::draw_rectangle(image, face, dlib::bgr_pixel(255, 0, 0));
   }
