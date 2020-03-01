@@ -56,6 +56,11 @@ void detectAndRender(size_t addr, int width, int height) {
   std::vector<dlib::rectangle> faces = faceDetector(image);
   for (auto&& face : faces) {
     dlib::draw_rectangle(image, face, dlib::bgr_pixel(255, 0, 0));
+    dlib::full_object_detection shape = poseModel(image, face);
+    for (int i = 0; i < shape.num_parts(); ++i) {
+      auto p = shape.part(i);
+      dlib::draw_solid_circle(image, p, 2, dlib::bgr_pixel(0, 255, 0));
+    }
   }
 
   if (SDL_MUSTLOCK(screen)) SDL_LockSurface(screen);
