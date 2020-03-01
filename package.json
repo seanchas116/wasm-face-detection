@@ -6,7 +6,7 @@
   "scripts": {
     "configure": "cd build && emconfigure cmake ..",
     "build": "cd build && emmake make",
-    "serve": "http-server .",
+    "serve": "webpack-dev-server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -21,7 +21,6 @@
   "homepage": "https://github.com/seanchas116/wasm-face-detection#readme",
   "private": true,
   "devDependencies": {
-    "http-server": "^0.12.1",
     "ts-loader": "^6.2.1",
     "typescript": "^3.8.3",
     "webpack": "^4.41.6",
