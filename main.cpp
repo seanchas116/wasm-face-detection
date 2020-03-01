@@ -4,6 +4,7 @@
 #include <emscripten/bind.h>
 #include <dlib/array2d.h>
 #include <dlib/image_processing/frontal_face_detector.h>
+#include <dlib/image_transforms/draw.h>
 
 namespace {
 
@@ -21,6 +22,18 @@ extern "C" int main(int argc, char** argv) {
   screen = SDL_SetVideoMode(WIDTH, HEIGHT, 32, SDL_SWSURFACE);
 
   return 0;
+}
+
+void putDlibImage(const dlib::array2d<dlib::bgr_pixel>& image) {
+  auto dst = reinterpret_cast<uint8_t *>(screen->pixels);
+  for (int y = 0; y < image.nr(); ++y) {
+    for (int x = 0; x < image.nc(); ++x) {
+      *dst++ = image[y][x].red;
+      *dst++ = image[y][x].green;
+      *dst++ = image[y][x].blue;
+      *dst++ = 255;
+    }
+  }
 }
 
 void putImageData(size_t addr, int width, int height) {
@@ -41,9 +54,12 @@ void putImageData(size_t addr, int width, int height) {
 
   std::vector<dlib::rectangle> faces = faceDetector(image);
   std::cout << "faces: " << faces.size() << std::endl;
+  for (auto&& face : faces) {
+    dlib::draw_rectangle(image, face, dlib::bgr_pixel(255, 0, 0));
+  }
 
   if (SDL_MUSTLOCK(screen)) SDL_LockSurface(screen);
-  memcpy(screen->pixels, data, width * height * 4);
+  putDlibImage(image);
   if (SDL_MUSTLOCK(screen)) SDL_UnlockSurface(screen);
   SDL_Flip(screen); 
 }
