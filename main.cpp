@@ -19,8 +19,6 @@ dlib::shape_predictor poseModel;
 }
 
 extern "C" int main(int argc, char** argv) {
-  cv::Mat hoge(100, 100, CV_8UC3);
-
   dlib::deserialize("/shape_predictor_68_face_landmarks.dat") >> poseModel;
 
   SDL_Init(SDL_INIT_VIDEO);
