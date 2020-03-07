@@ -125,26 +125,6 @@ set_target_properties(opencv_bioinspired PROPERTIES
 list(APPEND _IMPORT_CHECK_TARGETS opencv_bioinspired )
 list(APPEND _IMPORT_CHECK_FILES_FOR_opencv_bioinspired "${_IMPORT_PREFIX}/lib/libopencv_bioinspired.a" )
 
-# Import target "opencv_dnn" for configuration "Release"
-set_property(TARGET opencv_dnn APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
-set_target_properties(opencv_dnn PROPERTIES
-  IMPORTED_LINK_INTERFACE_LANGUAGES_RELEASE "CXX"
-  IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/lib/libopencv_dnn.a"
-  )
-
-list(APPEND _IMPORT_CHECK_TARGETS opencv_dnn )
-list(APPEND _IMPORT_CHECK_FILES_FOR_opencv_dnn "${_IMPORT_PREFIX}/lib/libopencv_dnn.a" )
-
-# Import target "opencv_dnn_superres" for configuration "Release"
-set_property(TARGET opencv_dnn_superres APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
-set_target_properties(opencv_dnn_superres PROPERTIES
-  IMPORTED_LINK_INTERFACE_LANGUAGES_RELEASE "CXX"
-  IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/lib/libopencv_dnn_superres.a"
-  )
-
-list(APPEND _IMPORT_CHECK_TARGETS opencv_dnn_superres )
-list(APPEND _IMPORT_CHECK_FILES_FOR_opencv_dnn_superres "${_IMPORT_PREFIX}/lib/libopencv_dnn_superres.a" )
-
 # Import target "opencv_features2d" for configuration "Release"
 set_property(TARGET opencv_features2d APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
 set_target_properties(opencv_features2d PROPERTIES

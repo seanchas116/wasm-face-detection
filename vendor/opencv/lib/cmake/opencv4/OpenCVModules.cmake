@@ -16,7 +16,7 @@ set(CMAKE_IMPORT_FILE_VERSION 1)
 set(_targetsDefined)
 set(_targetsNotDefined)
 set(_expectedTargets)
-foreach(_expectedTarget zlib libprotobuf opencv_core opencv_flann opencv_imgproc opencv_phase_unwrapping opencv_photo opencv_plot opencv_reg opencv_surface_matching opencv_xphoto opencv_bioinspired opencv_dnn opencv_dnn_superres opencv_features2d opencv_fuzzy opencv_hfs opencv_img_hash opencv_imgcodecs opencv_line_descriptor opencv_saliency opencv_calib3d opencv_objdetect opencv_rgbd opencv_structured_light opencv_video opencv_xfeatures2d opencv_ximgproc opencv_xobjdetect opencv_aruco opencv_bgsegm opencv_dpm opencv_face opencv_optflow opencv_tracking opencv_stereo)
+foreach(_expectedTarget zlib libprotobuf opencv_core opencv_flann opencv_imgproc opencv_phase_unwrapping opencv_photo opencv_plot opencv_reg opencv_surface_matching opencv_xphoto opencv_bioinspired opencv_features2d opencv_fuzzy opencv_hfs opencv_img_hash opencv_imgcodecs opencv_line_descriptor opencv_saliency opencv_calib3d opencv_objdetect opencv_rgbd opencv_structured_light opencv_video opencv_xfeatures2d opencv_ximgproc opencv_xobjdetect opencv_aruco opencv_bgsegm opencv_dpm opencv_face opencv_optflow opencv_tracking opencv_stereo)
   list(APPEND _expectedTargets ${_expectedTarget})
   if(NOT TARGET ${_expectedTarget})
     list(APPEND _targetsNotDefined ${_expectedTarget})
@@ -124,20 +124,6 @@ add_library(opencv_bioinspired STATIC IMPORTED)
 
 set_target_properties(opencv_bioinspired PROPERTIES
   INTERFACE_LINK_LIBRARIES "\$<LINK_ONLY:opencv_core>;opencv_core"
-)
-
-# Create imported target opencv_dnn
-add_library(opencv_dnn STATIC IMPORTED)
-
-set_target_properties(opencv_dnn PROPERTIES
-  INTERFACE_LINK_LIBRARIES "\$<LINK_ONLY:opencv_core>;\$<LINK_ONLY:opencv_imgproc>;opencv_core;opencv_imgproc;\$<LINK_ONLY:libprotobuf>"
-)
-
-# Create imported target opencv_dnn_superres
-add_library(opencv_dnn_superres STATIC IMPORTED)
-
-set_target_properties(opencv_dnn_superres PROPERTIES
-  INTERFACE_LINK_LIBRARIES "\$<LINK_ONLY:opencv_core>;\$<LINK_ONLY:opencv_imgproc>;\$<LINK_ONLY:opencv_dnn>;opencv_core;opencv_imgproc;opencv_dnn"
 )
 
 # Create imported target opencv_features2d
@@ -284,14 +270,14 @@ set_target_properties(opencv_optflow PROPERTIES
 add_library(opencv_tracking STATIC IMPORTED)
 
 set_target_properties(opencv_tracking PROPERTIES
-  INTERFACE_LINK_LIBRARIES "\$<LINK_ONLY:opencv_core>;\$<LINK_ONLY:opencv_flann>;\$<LINK_ONLY:opencv_imgproc>;\$<LINK_ONLY:opencv_plot>;\$<LINK_ONLY:opencv_dnn>;\$<LINK_ONLY:opencv_features2d>;\$<LINK_ONLY:opencv_calib3d>;\$<LINK_ONLY:opencv_video>;opencv_core;opencv_flann;opencv_imgproc;opencv_plot;opencv_dnn;opencv_features2d;opencv_calib3d;opencv_video"
+  INTERFACE_LINK_LIBRARIES "\$<LINK_ONLY:opencv_core>;\$<LINK_ONLY:opencv_flann>;\$<LINK_ONLY:opencv_imgproc>;\$<LINK_ONLY:opencv_plot>;\$<LINK_ONLY:opencv_features2d>;\$<LINK_ONLY:opencv_calib3d>;\$<LINK_ONLY:opencv_video>;opencv_core;opencv_flann;opencv_imgproc;opencv_plot;opencv_features2d;opencv_calib3d;opencv_video"
 )
 
 # Create imported target opencv_stereo
 add_library(opencv_stereo STATIC IMPORTED)
 
 set_target_properties(opencv_stereo PROPERTIES
-  INTERFACE_LINK_LIBRARIES "\$<LINK_ONLY:opencv_core>;\$<LINK_ONLY:opencv_flann>;\$<LINK_ONLY:opencv_imgproc>;\$<LINK_ONLY:opencv_plot>;\$<LINK_ONLY:opencv_dnn>;\$<LINK_ONLY:opencv_features2d>;\$<LINK_ONLY:opencv_calib3d>;\$<LINK_ONLY:opencv_video>;\$<LINK_ONLY:opencv_tracking>;opencv_core;opencv_flann;opencv_imgproc;opencv_plot;opencv_dnn;opencv_features2d;opencv_calib3d;opencv_video;opencv_tracking"
+  INTERFACE_LINK_LIBRARIES "\$<LINK_ONLY:opencv_core>;\$<LINK_ONLY:opencv_flann>;\$<LINK_ONLY:opencv_imgproc>;\$<LINK_ONLY:opencv_plot>;\$<LINK_ONLY:opencv_features2d>;\$<LINK_ONLY:opencv_calib3d>;\$<LINK_ONLY:opencv_video>;\$<LINK_ONLY:opencv_tracking>;opencv_core;opencv_flann;opencv_imgproc;opencv_plot;opencv_features2d;opencv_calib3d;opencv_video;opencv_tracking"
 )
 
 if(CMAKE_VERSION VERSION_LESS 2.8.12)
