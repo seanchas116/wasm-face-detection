@@ -54,12 +54,13 @@ void detectAndRender(size_t addr, int width, int height) {
   cv::Mat bgrImage;
   cv::cvtColor(rgbaImage, bgrImage, cv::COLOR_RGBA2BGR);
 
-  dlib::cv_image<dlib::bgr_pixel> dlibImage(bgrImage);
+  auto faces = detectFaces(bgrImage);
+  auto dlibImage = dlib::cv_image<dlib::bgr_pixel>(bgrImage);
 
-  std::vector<dlib::rectangle> faces = faceDetector(dlibImage);
   for (auto&& face : faces) {
-    dlib::draw_rectangle(dlibImage, face, dlib::bgr_pixel(255, 0, 0));
-    dlib::full_object_detection shape = poseModel(dlibImage, face);
+    dlib::rectangle dlibFace(face.tl().x, face.tl().y, face.br().x, face.br().y);
+    dlib::draw_rectangle(dlibImage, dlibFace, dlib::bgr_pixel(255, 0, 0));
+    dlib::full_object_detection shape = poseModel(dlibImage, dlibFace);
     for (int i = 0; i < shape.num_parts(); ++i) {
       auto p = shape.part(i);
       dlib::draw_solid_circle(dlibImage, p, 2, dlib::bgr_pixel(0, 255, 0));
