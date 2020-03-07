@@ -4,8 +4,9 @@
   "description": "Face Detection using dlib/OpenCV in WebAssembly",
   "main": "index.js",
   "scripts": {
-    "configure:cpp": "mkdir -p dist/build && cd dist/build && emconfigure cmake ../..",
+    "configure:cpp": "mkdir -p dist/build && cd dist/build && emcmake cmake ../..",
     "build:cpp": "cd dist/build && emmake make",
+    "clean:cpp": "cd dist/build && emmake make clean",
     "build": "npm run configure:cpp && npm run build:cpp && webpack",
     "serve": "webpack-dev-server",
     "deploy": "npm run build && gh-pages -d dist -s '**/*.+(html|js|wasm|dat)'",
