@@ -34,8 +34,8 @@ index 10e04ea020..52747c31d2 100644
  
      def get_cmake_cmd(self):
          cmd = ["cmake",
-+               "-DCMAKE_INSTALL_PREFIX=/path/to/install",
-+               "-DOPENCV_EXTRA_MODULES_PATH=/path/to/opencv_contrib/modules",
++               "-DCMAKE_INSTALL_PREFIX=install",
++               "-DOPENCV_EXTRA_MODULES_PATH=../../opencv_contrib/modules",
                 "-DENABLE_PIC=FALSE", # To workaround emscripten upstream backend issue https://github.com/emscripten-core/emscripten/issues/8761
                 "-DCMAKE_BUILD_TYPE=Release",
                 "-DCMAKE_TOOLCHAIN_FILE='%s'" % self.get_toolchain_file(),
@@ -67,3 +67,4 @@ index 10e04ea020..52747c31d2 100644
 * `cd build_wasm`
 * `emmake make`
 * `emmake make install`
+* OpenCV lib and headers are installed in `build_wasm/install` diretory
