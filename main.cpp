@@ -16,7 +16,7 @@ constexpr int HEIGHT = 240;
 SDL_Surface* screen = nullptr;
 dlib::frontal_face_detector faceDetector = dlib::get_frontal_face_detector();
 dlib::shape_predictor poseModel;
-cv::Ptr<cv::Tracker> tracker = cv::TrackerKCF::create();
+std::shared_ptr<cv::Tracker> tracker = cv::TrackerKCF::create();
 
 }
 
@@ -27,6 +27,25 @@ extern "C" int main(int argc, char** argv) {
   screen = SDL_SetVideoMode(WIDTH, HEIGHT, 32, SDL_SWSURFACE);
 
   return 0;
+}
+
+std::vector<cv::Rect> detectFaces(const cv::Mat& bgrImage) {
+  if (tracker) {
+    cv::Rect2d outRect;
+    if (tracker->update(bgrImage, outRect)) {
+      return {outRect};
+    }
+  }
+  tracker.reset();
+  std::vector<dlib::rectangle> faces = faceDetector(dlib::cv_image<dlib::bgr_pixel>(bgrImage));
+  if (faces.empty()) {
+    return {};
+  }
+  auto face = faces.at(0);
+  cv::Rect2d rect(face.left(), face.top(), face.width(), face.height());
+  tracker = cv::TrackerKCF::create();
+  tracker->init(bgrImage, rect);
+  return {rect};
 }
 
 void detectAndRender(size_t addr, int width, int height) {
