@@ -29,7 +29,7 @@ extern "C" int main(int argc, char** argv) {
   return 0;
 }
 
-std::vector<cv::Rect> detectFaces(const cv::Mat& bgrImage) {
+std::vector<cv::Rect> detectTrackFaces(const cv::Mat& bgrImage) {
   if (tracker) {
     cv::Rect2d outRect;
     if (tracker->update(bgrImage, outRect)) {
@@ -54,7 +54,7 @@ void detectAndRender(size_t addr, int width, int height) {
   cv::Mat bgrImage;
   cv::cvtColor(rgbaImage, bgrImage, cv::COLOR_RGBA2BGR);
 
-  auto faces = detectFaces(bgrImage);
+  auto faces = detectTrackFaces(bgrImage);
   auto dlibImage = dlib::cv_image<dlib::bgr_pixel>(bgrImage);
 
   for (auto&& face : faces) {
