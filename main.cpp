@@ -5,7 +5,8 @@
 #include <dlib/image_processing/frontal_face_detector.h>
 #include <dlib/image_processing.h>
 #include <dlib/image_transforms/draw.h>
-#include <opencv2/core.hpp>
+#include <dlib/opencv.h>
+#include <opencv2/opencv.hpp>
 
 namespace {
 
@@ -28,46 +29,27 @@ extern "C" int main(int argc, char** argv) {
   return 0;
 }
 
-void putDlibImage(const dlib::array2d<dlib::bgr_pixel>& image) {
-  auto dst = reinterpret_cast<uint8_t *>(screen->pixels);
-  for (int y = 0; y < image.nr(); ++y) {
-    for (int x = 0; x < image.nc(); ++x) {
-      *dst++ = image[y][x].red;
-      *dst++ = image[y][x].green;
-      *dst++ = image[y][x].blue;
-      *dst++ = 255;
-    }
-  }
-}
-
 void detectAndRender(size_t addr, int width, int height) {
-  auto data = reinterpret_cast<const uint8_t *>(addr);
+  auto data = reinterpret_cast<void *>(addr);
+  cv::Mat rgbaImage(height, width, CV_8UC4, data); // RGBA
+  cv::Mat bgrImage;
+  cv::cvtColor(rgbaImage, bgrImage, cv::COLOR_RGBA2BGR);
 
-  dlib::array2d<dlib::bgr_pixel> image(height, width);
-  {
-    auto p = data;
-    for (int y = 0; y < height; ++y) {
-      for (int x = 0; x < width; ++x) {
-        image[y][x].red = *p++;
-        image[y][x].green = *p++;
-        image[y][x].blue = *p++;
-        p++;
-      }
-    }
-  }
+  dlib::cv_image<dlib::bgr_pixel> dlibImage(bgrImage);
 
-  std::vector<dlib::rectangle> faces = faceDetector(image);
+  std::vector<dlib::rectangle> faces = faceDetector(dlibImage);
   for (auto&& face : faces) {
-    dlib::draw_rectangle(image, face, dlib::bgr_pixel(255, 0, 0));
-    dlib::full_object_detection shape = poseModel(image, face);
+    dlib::draw_rectangle(dlibImage, face, dlib::bgr_pixel(255, 0, 0));
+    dlib::full_object_detection shape = poseModel(dlibImage, face);
     for (int i = 0; i < shape.num_parts(); ++i) {
       auto p = shape.part(i);
-      dlib::draw_solid_circle(image, p, 2, dlib::bgr_pixel(0, 255, 0));
+      dlib::draw_solid_circle(dlibImage, p, 2, dlib::bgr_pixel(0, 255, 0));
     }
   }
 
   if (SDL_MUSTLOCK(screen)) SDL_LockSurface(screen);
-  putDlibImage(image);
+  cv::Mat dstRGBAImage(height, width, CV_8UC4, screen->pixels);
+  cv::cvtColor(bgrImage, dstRGBAImage, cv::COLOR_BGR2RGBA);
   if (SDL_MUSTLOCK(screen)) SDL_UnlockSurface(screen);
   SDL_Flip(screen); 
 }
