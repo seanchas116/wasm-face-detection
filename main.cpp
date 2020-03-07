@@ -47,7 +47,7 @@ std::vector<cv::Rect> detectTrackFaces(const cv::Mat& bgrImage) {
   cv::Rect2d rect(face.left(), face.top(), face.width(), face.height());
   tracker = cv::TrackerKCF::create();
   tracker->init(bgrImage, rect);
-  trackableCount = 60;
+  trackableCount = 20;
   return {rect};
 }
 
