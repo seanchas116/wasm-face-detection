@@ -20,8 +20,10 @@ npm run serve
 
 ## How to build OpenCV 4.2.0 for Emscripten (with contrib)
 
-* clone opencv and opencv_contrib
-* Edit opencv/platforms/js/build_js.py
+* `git clone git@github.com:opencv/opencv.git`
+* `git clone git@github.com:opencv/opencv_contrib.git`
+* `cd opencv`
+* Edit `opencv/platforms/js/build_js.py`
 
 ```
 diff --git a/platforms/js/build_js.py b/platforms/js/build_js.py
@@ -61,7 +63,6 @@ index 10e04ea020..52747c31d2 100644
                 "-DBUILD_TESTS=OFF",
 ```
 
-* `cd opencv`
 * `python ./platforms/js/build_js.py build_wasm --build_wasm --emscripten_dir=/path/to/emscripten --config_only`
 * `cd build_wasm`
 * `emmake make`
