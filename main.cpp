@@ -7,6 +7,7 @@
 #include <dlib/image_transforms/draw.h>
 #include <dlib/opencv.h>
 #include <opencv2/opencv.hpp>
+#include <opencv2/tracking.hpp>
 
 namespace {
 
@@ -15,6 +16,7 @@ constexpr int HEIGHT = 240;
 SDL_Surface* screen = nullptr;
 dlib::frontal_face_detector faceDetector = dlib::get_frontal_face_detector();
 dlib::shape_predictor poseModel;
+cv::Ptr<cv::Tracker> tracker = cv::TrackerKCF::create();
 
 }
 
