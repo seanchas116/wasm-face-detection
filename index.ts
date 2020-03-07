@@ -37,6 +37,8 @@ const init = async () => {
     requestAnimationFrame(updateCanvas)
   }
   updateCanvas()
+
+  document.getElementById('loading')!.hidden = true
 }
 
 window.Module = {
