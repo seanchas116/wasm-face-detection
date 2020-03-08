@@ -128,20 +128,29 @@ void detectAndRender(size_t addr, int width, int height) {
   cv::cvtColor(rgbaImage, bgrImage, cv::COLOR_RGBA2BGR);
 
   auto faces = faceDetector.detectTrackFaces(bgrImage);
+  std::vector<std::vector<cv::Point2d>> landmarkss;
+
+  for (auto&& face : faces) {
+    auto landmarks = faceDetector.detectLandmarks(bgrImage, face);
+    landmarkss.push_back(std::move(landmarks));
+
+
+  }
+
+  bgrImage = personSegmenter.segment(bgrImage);
 
   for (auto&& face : faces) {
     cv::rectangle(bgrImage, face, cv::Scalar(255, 0, 0));
-    auto landmarks = faceDetector.detectLandmarks(bgrImage, face);
+  }
+  for (auto&& landmarks : landmarkss) {
     for (auto&& p : landmarks) {
       cv::circle(bgrImage, p, 2, cv::Scalar(0, 255, 0));
     }
   }
 
-  auto segmented = personSegmenter.segment(bgrImage);
-
   if (SDL_MUSTLOCK(screen)) SDL_LockSurface(screen);
   cv::Mat dstRGBAImage(height, width, CV_8UC4, screen->pixels);
-  cv::cvtColor(segmented, dstRGBAImage, cv::COLOR_BGR2RGBA);
+  cv::cvtColor(bgrImage, dstRGBAImage, cv::COLOR_BGR2RGBA);
   if (SDL_MUSTLOCK(screen)) SDL_UnlockSurface(screen);
   SDL_Flip(screen); 
 }
