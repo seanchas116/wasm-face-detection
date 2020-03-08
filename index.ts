@@ -3,7 +3,8 @@ interface EmscriptenModule {
 }
 
 const preRun = () => {
-  FS.createPreloadedFile('/', 'shape_predictor_68_face_landmarks.dat', 'shape_predictor_68_face_landmarks.dat', true, false);
+  FS.createPreloadedFile('/', 'shape_predictor_68_face_landmarks.dat', 'shape_predictor_68_face_landmarks.dat', true, false)
+  FS.createPreloadedFile('/', 'deeplabv3_257_mv_gpu.tflite', 'deeplabv3_257_mv_gpu.tflite', true, false)
 }
 
 const init = async () => {
