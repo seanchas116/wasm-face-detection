@@ -72,8 +72,7 @@ class PersonSegmenter {
     cv::Mat input;
     cv::resize(bgrImage, input, cv::Size(_inputSize, _inputSize));
     cv::cvtColor(input, input, cv::COLOR_BGR2RGB);
-    cv::Mat inputF;
-    input.convertTo(inputF, CV_32FC3, 1 / 255.0);
+    input.convertTo(input, CV_32FC3, 1 / 255.0);
 
     auto inputData = _interpreter->typed_tensor<float>(_interpreter->inputs().at(0));
     memcpy(inputData, input.data, sizeof(float) * 3 * _inputSize * _inputSize);
