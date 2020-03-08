@@ -50,7 +50,6 @@ class FaceDetector {
   }
 
  private:
-
   dlib::frontal_face_detector faceDetector = dlib::get_frontal_face_detector();
   dlib::shape_predictor poseModel;
   std::shared_ptr<cv::Tracker> tracker;
