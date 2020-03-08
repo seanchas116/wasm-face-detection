@@ -90,8 +90,11 @@ class PersonSegmenter {
       int index = std::max_element(classes, classes + classCount) - classes;
       output.data[i] = index == 15 ? 255 : 0;
     }
+    cv::cvtColor(output, output, cv::COLOR_GRAY2BGR);
+    cv::resize(output, output, cv::Size(bgrImage.cols, bgrImage.rows));
+    cv::addWeighted(bgrImage, 0.5, output, 0.5, 0, output);
 
-    return bgrImage;
+    return output;
   }
 
  private:
