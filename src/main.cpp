@@ -109,6 +109,7 @@ constexpr int WIDTH = 320;
 constexpr int HEIGHT = 240;
 SDL_Surface* screen = nullptr;
 FaceDetector faceDetector;
+PersonSegmenter personSegmenter;
 
 }
 
@@ -136,9 +137,11 @@ void detectAndRender(size_t addr, int width, int height) {
     }
   }
 
+  auto segmented = personSegmenter.segment(bgrImage);
+
   if (SDL_MUSTLOCK(screen)) SDL_LockSurface(screen);
   cv::Mat dstRGBAImage(height, width, CV_8UC4, screen->pixels);
-  cv::cvtColor(bgrImage, dstRGBAImage, cv::COLOR_BGR2RGBA);
+  cv::cvtColor(segmented, dstRGBAImage, cv::COLOR_BGR2RGBA);
   if (SDL_MUSTLOCK(screen)) SDL_UnlockSurface(screen);
   SDL_Flip(screen); 
 }
