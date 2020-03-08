@@ -56,6 +56,19 @@ class FaceDetector {
   int trackableCount = 0;
 };
 
+class PersonSegmenter {
+ public:
+  PersonSegmenter() {
+    _model = tflite::FlatBufferModel::BuildFromFile("/deeplabv3_257_mv_gpu.tflite");
+    tflite::ops::builtin::BuiltinOpResolver resolver;
+    tflite::InterpreterBuilder(*_model, resolver)(&_interpreter);
+  }
+
+ private:
+  std::unique_ptr<tflite::FlatBufferModel> _model;
+  std::unique_ptr<tflite::Interpreter> _interpreter;
+};
+
 namespace {
 
 constexpr int WIDTH = 320;
@@ -66,8 +79,6 @@ FaceDetector faceDetector;
 }
 
 extern "C" int main(int argc, char** argv) {
-  std::unique_ptr<tflite::FlatBufferModel> model;
-  std::unique_ptr<tflite::Interpreter> interpreter;
 
   SDL_Init(SDL_INIT_VIDEO);
   screen = SDL_SetVideoMode(WIDTH, HEIGHT, 32, SDL_SWSURFACE);
