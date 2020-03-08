@@ -3,7 +3,7 @@ const path = require('path')
 const distDir = path.resolve(__dirname, './dist')
 
 module.exports = {
-  entry: './index.ts',
+  entry: './src/index.ts',
   module: {
     rules: [
       {

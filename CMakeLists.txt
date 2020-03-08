@@ -9,7 +9,8 @@ include_directories(vendor/dlib)
 include_directories(vendor/opencv/include/opencv4)
 include_directories(vendor/tensorflow-lite/include)
 
-add_executable(cppmain main.cpp vendor/dlib/dlib/all/source.cpp)
+file(GLOB_RECURSE sources "src/*.cpp" "src/*.hpp")
+add_executable(cppmain ${sources} vendor/dlib/dlib/all/source.cpp)
 
 file(GLOB opencv_core "vendor/opencv/lib/*.a")
 target_link_libraries(cppmain ${opencv_core} ${CMAKE_CURRENT_SOURCE_DIR}/vendor/tensorflow-lite/lib/libtensorflow-lite.a)
