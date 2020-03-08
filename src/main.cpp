@@ -12,15 +12,57 @@
 #include <tensorflow/lite/kernels/register.h>
 #include <tensorflow/lite/model.h>
 
+class FaceDetector {
+ public:
+  FaceDetector() {
+    dlib::deserialize("/shape_predictor_68_face_landmarks.dat") >> poseModel;
+  }
+
+  std::vector<cv::Rect2d> detectTrackFaces(const cv::Mat& bgrImage) {
+    if (tracker && trackableCount > 0) {
+      cv::Rect2d outRect;
+      if (tracker->update(bgrImage, outRect)) {
+        --trackableCount;
+        return {outRect};
+      }
+    }
+    tracker.reset();
+    std::vector<dlib::rectangle> faces = faceDetector(dlib::cv_image<dlib::bgr_pixel>(bgrImage));
+    if (faces.empty()) {
+      return {};
+    }
+    auto face = faces.at(0);
+    cv::Rect2d rect(face.left(), face.top(), face.width(), face.height());
+    tracker = cv::TrackerKCF::create();
+    tracker->init(bgrImage, rect);
+    trackableCount = 20;
+    return {rect};
+  }
+
+  std::vector<cv::Point2d> detectLandmarks(const cv::Mat& bgrImage, const cv::Rect2d& face) {
+    dlib::rectangle dlibFace(face.tl().x, face.tl().y, face.br().x, face.br().y);
+    dlib::full_object_detection shape = poseModel(dlib::cv_image<dlib::bgr_pixel>(bgrImage), dlibFace);
+    std::vector<cv::Point2d> points(shape.num_parts());
+    for (int i = 0; i < shape.num_parts(); ++i) {
+      points[i] = cv::Point2d(shape.part(i).x(), shape.part(i).y());
+    }
+    return points;
+  }
+
+ private:
+
+  dlib::frontal_face_detector faceDetector = dlib::get_frontal_face_detector();
+  dlib::shape_predictor poseModel;
+  std::shared_ptr<cv::Tracker> tracker;
+  int trackableCount = 0;
+};
+
 namespace {
 
 constexpr int WIDTH = 320;
 constexpr int HEIGHT = 240;
 SDL_Surface* screen = nullptr;
-dlib::frontal_face_detector faceDetector = dlib::get_frontal_face_detector();
-dlib::shape_predictor poseModel;
-std::shared_ptr<cv::Tracker> tracker;
-int trackableCount = 0;
+FaceDetector faceDetector;
 
 }
 
@@ -28,33 +70,10 @@ extern "C" int main(int argc, char** argv) {
   std::unique_ptr<tflite::FlatBufferModel> model;
   std::unique_ptr<tflite::Interpreter> interpreter;
 
-  dlib::deserialize("/shape_predictor_68_face_landmarks.dat") >> poseModel;
-
   SDL_Init(SDL_INIT_VIDEO);
   screen = SDL_SetVideoMode(WIDTH, HEIGHT, 32, SDL_SWSURFACE);
 
   return 0;
-}
-
-std::vector<cv::Rect> detectTrackFaces(const cv::Mat& bgrImage) {
-  if (tracker && trackableCount > 0) {
-    cv::Rect2d outRect;
-    if (tracker->update(bgrImage, outRect)) {
-      --trackableCount;
-      return {outRect};
-    }
-  }
-  tracker.reset();
-  std::vector<dlib::rectangle> faces = faceDetector(dlib::cv_image<dlib::bgr_pixel>(bgrImage));
-  if (faces.empty()) {
-    return {};
-  }
-  auto face = faces.at(0);
-  cv::Rect2d rect(face.left(), face.top(), face.width(), face.height());
-  tracker = cv::TrackerKCF::create();
-  tracker->init(bgrImage, rect);
-  trackableCount = 20;
-  return {rect};
 }
 
 void detectAndRender(size_t addr, int width, int height) {
@@ -63,16 +82,13 @@ void detectAndRender(size_t addr, int width, int height) {
   cv::Mat bgrImage;
   cv::cvtColor(rgbaImage, bgrImage, cv::COLOR_RGBA2BGR);
 
-  auto faces = detectTrackFaces(bgrImage);
-  auto dlibImage = dlib::cv_image<dlib::bgr_pixel>(bgrImage);
+  auto faces = faceDetector.detectTrackFaces(bgrImage);
 
   for (auto&& face : faces) {
-    dlib::rectangle dlibFace(face.tl().x, face.tl().y, face.br().x, face.br().y);
-    dlib::draw_rectangle(dlibImage, dlibFace, dlib::bgr_pixel(255, 0, 0));
-    dlib::full_object_detection shape = poseModel(dlibImage, dlibFace);
-    for (int i = 0; i < shape.num_parts(); ++i) {
-      auto p = shape.part(i);
-      dlib::draw_solid_circle(dlibImage, p, 2, dlib::bgr_pixel(0, 255, 0));
+    cv::rectangle(bgrImage, face, cv::Scalar(255, 0, 0));
+    auto landmarks = faceDetector.detectLandmarks(bgrImage, face);
+    for (auto&& p : landmarks) {
+      cv::circle(bgrImage, p, 2, cv::Scalar(0, 255, 0));
     }
   }
 
