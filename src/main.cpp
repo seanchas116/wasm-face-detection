@@ -75,7 +75,7 @@ class PersonSegmenter {
     cv::Mat inputF;
     input.convertTo(inputF, CV_32FC3, 1 / 255.0);
 
-    auto inputData = _interpreter->typed_tensor<float>(_interpreter->inputs()[0]);
+    auto inputData = _interpreter->typed_tensor<float>(_interpreter->inputs().at(0));
     memcpy(inputData, input.data, sizeof(float) * 3 * _inputSize * _inputSize);
 
     if (_interpreter->Invoke() != kTfLiteOk) {
