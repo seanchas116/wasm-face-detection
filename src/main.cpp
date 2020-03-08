@@ -62,11 +62,32 @@ class PersonSegmenter {
     _model = tflite::FlatBufferModel::BuildFromFile("/deeplabv3_257_mv_gpu.tflite");
     tflite::ops::builtin::BuiltinOpResolver resolver;
     tflite::InterpreterBuilder(*_model, resolver)(&_interpreter);
+    if (_interpreter->AllocateTensors() != kTfLiteOk) {
+      std::cerr << "Error AllocateTensors" << std::endl;
+    }
+  }
+
+  cv::Mat segment(const cv::Mat& bgrImage) {
+    cv::Mat input;
+    cv::resize(bgrImage, input, cv::Size(_inputSize, _inputSize));
+    cv::cvtColor(input, input, cv::COLOR_BGR2RGB);
+    cv::Mat inputF;
+    input.convertTo(inputF, CV_32FC3, 1 / 255.0);
+
+    auto inputData = _interpreter->typed_tensor<float>(_interpreter->inputs()[0]);
+    memcpy(inputData, input.data, sizeof(float) * 3 * _inputSize * _inputSize);
+
+    if (_interpreter->Invoke() != kTfLiteOk) {
+      std::cerr << "Error Invoke" << std::endl;
+    }
+    // TODO: parse error
+    return bgrImage;
   }
 
  private:
   std::unique_ptr<tflite::FlatBufferModel> _model;
   std::unique_ptr<tflite::Interpreter> _interpreter;
+  constexpr static int _inputSize = 257;
 };
 
 namespace {
