@@ -80,7 +80,17 @@ class PersonSegmenter {
     if (_interpreter->Invoke() != kTfLiteOk) {
       std::cerr << "Error Invoke" << std::endl;
     }
-    // TODO: parse error
+
+    auto outputData = _interpreter->typed_tensor<float>(_interpreter->outputs()[0]);
+    cv::Mat output(_inputSize, _inputSize, CV_8UC1);
+
+    for (int i = 0; i < _inputSize * _inputSize; ++i) {
+      constexpr int classCount = 21;
+      auto classes = outputData + i * classCount;
+      int index = std::max_element(classes, classes + classCount) - classes;
+      output.data[i] = index == 15 ? 255 : 0;
+    }
+
     return bgrImage;
   }
 
