@@ -62,6 +62,7 @@ class PersonSegmenter {
     _model = tflite::FlatBufferModel::BuildFromFile("/deeplabv3_257_mv_gpu.tflite");
     tflite::ops::builtin::BuiltinOpResolver resolver;
     tflite::InterpreterBuilder(*_model, resolver)(&_interpreter);
+    _interpreter->SetNumThreads(1);
     if (_interpreter->AllocateTensors() != kTfLiteOk) {
       std::cerr << "Error AllocateTensors" << std::endl;
     }
