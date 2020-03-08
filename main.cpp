@@ -8,6 +8,9 @@
 #include <dlib/opencv.h>
 #include <opencv2/opencv.hpp>
 #include <opencv2/tracking.hpp>
+#include <tensorflow/lite/interpreter.h>
+#include <tensorflow/lite/kernels/register.h>
+#include <tensorflow/lite/model.h>
 
 namespace {
 
@@ -22,6 +25,9 @@ int trackableCount = 0;
 }
 
 extern "C" int main(int argc, char** argv) {
+  std::unique_ptr<tflite::FlatBufferModel> model;
+  std::unique_ptr<tflite::Interpreter> interpreter;
+
   dlib::deserialize("/shape_predictor_68_face_landmarks.dat") >> poseModel;
 
   SDL_Init(SDL_INIT_VIDEO);
