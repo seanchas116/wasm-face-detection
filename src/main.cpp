@@ -137,7 +137,7 @@ void detectAndRender(size_t addr, int width, int height) {
 
   }
 
-  bgrImage = personSegmenter.segment(bgrImage);
+  //bgrImage = personSegmenter.segment(bgrImage);
 
   for (auto&& face : faces) {
     cv::rectangle(bgrImage, face, cv::Scalar(255, 0, 0));
